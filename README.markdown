@@ -196,6 +196,17 @@ this will produce the following
     result.id.class         # => Fixnum
     result.created_at.class # => Time
 
+You can nest a collection of Trashes within another Trash by using the built in collection transformer:
+
+    class ThingTrash < Hashie::Trash
+    end
+
+    class Result < Hashie::Trash
+      property :things, :transform_with => ThingTrash.collection_transformer
+    end
+
+This will cause every object in the `things` collection to be passed to `ThingTrash.new`
+
 ## Clash
 
 Clash is a Chainable Lazy Hash that allows you to easily construct
