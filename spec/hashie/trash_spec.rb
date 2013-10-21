@@ -145,6 +145,26 @@ describe Hashie::Trash do
     end
   end
 
+  describe "translating a collection nested within a Trash" do
+    class Thing < Hashie::Trash
+      property :foo
+    end
+
+    class TrashWithCollection < Hashie::Trash
+      property :things, :transform_with => Thing.collection_transformer
+    end
+
+    it "translates the collection" do
+      trash = TrashWithCollection.new(:things => [{:foo => :bar}, {:foo => :quux}])
+
+      trash.things.first.should be_a(Thing)
+      trash.things.first.foo.should == :bar
+
+      trash.things.last.should be_a(Thing)
+      trash.things.last.foo.should == :quux
+    end
+  end
+
   it "should raise an error when :from have the same value as property" do
     expect {
       class WrongTrash < Hashie::Trash

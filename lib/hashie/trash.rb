@@ -43,6 +43,17 @@ module Hashie
       end
     end
 
+
+    # Returns a transformer lambda that can be used with other Trash objects
+    # as a nested collection. For example:
+    #
+    # class TrashWithCollection
+    #   property :things, :transform_with => SomeTrash.collection_transformer
+    # end
+    def self.collection_transformer
+      lambda {|things| things.map {|t| new(t)}}
+    end
+
     # Set a value on the Dash in a Hash-like way. Only works
     # on pre-existing properties.
     def []=(property, value)
